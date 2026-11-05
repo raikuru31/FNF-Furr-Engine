@@ -83,6 +83,9 @@ class Main extends Sprite
 		
 		Controls.instance = new Controls();
 
+		// Экранное управление для меню (мобильная сборка)
+		objects.MobileUI.init();
+
 		// FlxG.game.focusLostFramerate = 60;
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, Error.onError);
 	}

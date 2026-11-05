@@ -88,6 +88,10 @@ class TouchControls extends FlxSpriteGroup
 		addButton(margin + size + gap, y, 'note_down', '↓', size);
 		addButton(FlxG.width - margin - size * 2 - gap, y, 'note_up', '↑', size);
 		addButton(FlxG.width - margin - size, y, 'note_right', '→', size);
+
+		// Пауза: маленькая кнопка в правом верхнем углу
+		var ps:Int = 84;
+		addButton(FlxG.width - margin - ps, margin, 'PAUSE', 'II', ps);
 	}
 
 	function addButton(x:Float, y:Float, action:String, label:String, size:Int):Void
@@ -96,8 +100,9 @@ class TouchControls extends FlxSpriteGroup
 		buttons.push(b);
 		add(b);
 
-		var t:FlxText = new FlxText(x, y + size * 0.3, size, label, 48);
-		t.setFormat(null, 48, FlxColor.WHITE, CENTER);
+		var fontSize:Int = Std.int(size * 0.32);
+		var t:FlxText = new FlxText(x, y + size * 0.3, size, label, fontSize);
+		t.setFormat(null, fontSize, FlxColor.WHITE, CENTER);
 		t.scrollFactor.set(0, 0);
 		t.alpha = 0.75;
 		add(t);
