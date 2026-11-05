@@ -49,7 +49,9 @@ class OptionsControl extends MusicBeatState {
 
         updateSelection();
 
+        #if FLX_MOUSE
         FlxG.mouse.visible = true;
+        #end
     }
 
     function getFormattedText(action:String, forEdit:Bool):String {
@@ -72,6 +74,7 @@ class OptionsControl extends MusicBeatState {
 
             handleMouseInput();
 
+            #if FLX_KEYBOARD
             // Горизонтальная навигация между слотами
             if (FlxG.keys.justPressed.LEFT || FlxG.keys.justPressed.RIGHT) {
                 curBindSlot = FlxMath.wrap(curBindSlot + (FlxG.keys.justPressed.LEFT ? -1 : 1), 0, 1);
@@ -95,8 +98,10 @@ class OptionsControl extends MusicBeatState {
                 ClientSetings.saveSettingsControls();
                 FlxG.switchState(new OptinsState());
             }
+            #end
         }
         else {
+            #if FLX_KEYBOARD
             if (FlxG.keys.justPressed.ANY) {
                 var pressedKey = FlxG.keys.firstJustPressed();
                 var action = sortedActions[curSelected];
@@ -110,10 +115,12 @@ class OptionsControl extends MusicBeatState {
                 updateSelection();
                 // ClientSetings.saveSettings();
             }
+            #end
         }
     }
 
     function handleMouseInput() {
+        #if FLX_MOUSE
         if (FlxG.mouse.justPressed) {
             // Проверяем клик по элементам меню
             for (i in 0...grpOptions.length) {
@@ -147,6 +154,7 @@ class OptionsControl extends MusicBeatState {
                 option.color = FlxColor.WHITE;
             }
         }
+        #end
     }
 
     function updateSelection() {

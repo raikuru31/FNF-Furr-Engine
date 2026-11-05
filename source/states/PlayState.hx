@@ -24,6 +24,7 @@ import objects.MySpleshForNote;
 import objects.Note;
 import objects.HealthIcon;
 import objects.Visualizer;
+import objects.TouchControls;
 
 import charectors.BF;
 
@@ -111,6 +112,11 @@ class PlayState extends MusicBeatState
 	public var playerStrums:FlxTypedGroup<MyStrumNote> 			= new FlxTypedGroup<MyStrumNote>();
 	public var dadStrums:FlxTypedGroup<MyStrumNote> 			= new FlxTypedGroup<MyStrumNote>();
 	public var spleshPlayer:FlxTypedGroup<MySpleshForNote> 		= new FlxTypedGroup<MySpleshForNote>();
+
+	// Виртуальные кнопки для мобильной сборки
+	#if mobile
+	public var touchControls:TouchControls 						= null;
+	#end
 
 	private var notes:FlxTypedGroup<Note>						= null;
 	private var unspawnNotes:Array<Note> 						= [];
@@ -289,6 +295,13 @@ class PlayState extends MusicBeatState
 		// Спавн основных стрелок
 		generateStaticArrows(0);
 		generateStaticArrows(1);
+
+		#if mobile
+		// Экранное управление: четыре кнопки поверх HUD-камеры
+		touchControls = new TouchControls();
+		touchControls.cameras = [camHUD];
+		add(touchControls);
+		#end
 
 		setForScript("defPosNotePlayerX", playerStrums.members[0].x);
         setForScript("defPosNotePlayerY", playerStrums.members[0].y);
@@ -689,6 +702,7 @@ class PlayState extends MusicBeatState
 			callForScript("onUpdate", elapsed);
 
 			ChekKey();
+			Controls.endTouchFrame();
 			for(i in 0 ... unspawnNotes.length)
 			{
 				var key = unspawnNotes[i].noteData;
