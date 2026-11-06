@@ -7,7 +7,7 @@ import flixel.util.FlxColor;
 import flixel.math.FlxMath;
 import flixel.system.FlxSound;
 
-class Watafak1 extends FlxState
+class Watafak extends FlxState
 {
     private var bars:Array<FlxSprite> = [];
     private var numBars:Int = 32; // Увеличим количество полос
@@ -42,7 +42,7 @@ class Watafak1 extends FlxState
         }
         
         // Загрузка музыки
-        music = FlxG.sound.load(AssetPaths.freakyMenu__ogg);
+        music = FlxG.sound.load('assets/music/freakyMenu.ogg');
         music.play();
     }
     

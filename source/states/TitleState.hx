@@ -132,7 +132,7 @@ class TitleState extends MusicBeatState
 
         if (controls.justPressed('BACK'))
         {
-            SwitshState.switchState(new Watafak1());
+            SwitshState.switchState(new Watafak());
         }
 
         if (FlxG.sound.music != null) 
