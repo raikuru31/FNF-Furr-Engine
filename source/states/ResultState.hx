@@ -81,7 +81,7 @@ class ResultState extends MusicBeatState
     override public function create():Void
     {
 
-        var data = AssetLoader.getText("data.json");
+        var data = DataFile.read();
         _FullData = Json.parse(data);
 
         trace(score);
@@ -712,7 +712,7 @@ class ResultState extends MusicBeatState
         "dataWeeks":[]
         }';
 
-        File.saveContent("data.json", output);
+        DataFile.write(output);
     }
 
     function returnDataSaveString(data:Array<Dynamic>):String 

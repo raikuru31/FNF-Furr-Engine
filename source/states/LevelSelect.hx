@@ -50,12 +50,11 @@ class LevelSelect extends MusicBeatState
     {	
         _skipCFT = true;
 
-        var data = AssetLoader.getText("data.json").trim();
+        var data = DataFile.read().trim();
         _FullData = Json.parse(data);
 
         var path = "assets/data";
-        var items = FileSystem.readDirectory(path);
-        var folders = [for (item in items) if (FileSystem.isDirectory('$path/$item')) item];
+        var folders = AssetLoader.listDirs(path);
 
         arraySong = folders;
         try 

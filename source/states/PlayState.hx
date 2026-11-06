@@ -702,7 +702,6 @@ class PlayState extends MusicBeatState
 			callForScript("onUpdate", elapsed);
 
 			ChekKey();
-			Controls.endTouchFrame();
 			for(i in 0 ... unspawnNotes.length)
 			{
 				var key = unspawnNotes[i].noteData;

@@ -18,6 +18,10 @@ class LogoState extends FlxState
 	{
         super.create();
         ClientSetings.loadPrefs();
+
+        // На Android data.json не существует изначально — создаём заготовку
+        // до перехода в меню, иначе Free Play падает на чтении файла
+        DataFile.ensure();
         // persistentUpdate = true;
 		// persistentDraw = true;
 

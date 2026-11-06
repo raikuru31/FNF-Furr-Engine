@@ -21,16 +21,37 @@ class Error
 	public static var NameError:String = '';
 	public static var infoError:String = '';
 
+	static var RU_MAP:Map<String, String> = [
+		"А" => "A", "Б" => "B", "В" => "V", "Г" => "G", "Д" => "D", "Е" => "E", "Ё" => "E",
+		"Ж" => "Zh", "З" => "Z", "И" => "I", "Й" => "Y", "К" => "K", "Л" => "L", "М" => "M",
+		"Н" => "N", "О" => "O", "П" => "P", "Р" => "R", "С" => "S", "Т" => "T", "У" => "U",
+		"Ф" => "F", "Х" => "H", "Ц" => "C", "Ч" => "Ch", "Ш" => "Sh", "Щ" => "Sch",
+		"Ъ" => "", "Ы" => "Y", "Ь" => "", "Э" => "E", "Ю" => "Yu", "Я" => "Ya",
+		"а" => "a", "б" => "b", "в" => "v", "г" => "g", "д" => "d", "е" => "e", "ё" => "e",
+		"ж" => "zh", "з" => "z", "и" => "i", "й" => "y", "к" => "k", "л" => "l", "м" => "m",
+		"н" => "n", "о" => "o", "п" => "p", "р" => "r", "с" => "s", "т" => "t", "у" => "u",
+		"ф" => "f", "х" => "h", "ц" => "c", "ч" => "ch", "ш" => "sh", "щ" => "sch",
+		"ъ" => "", "ы" => "y", "ь" => "", "э" => "e", "ю" => "yu", "я" => "ya"
+	];
+
+	/**
+	 * Кириллицу переводим в латиницу, а не в "?", иначе русские ошибки
+	 * выглядят как "?????? ?? ??????????" и ничего не говорят.
+	 */
 	static function asciiOnly(s:String):String
 	{
 		var out:StringBuf = new StringBuf();
 		for (i in 0...s.length)
 		{
+			var ch:String = s.charAt(i);
 			var c:Int = s.charCodeAt(i);
+
 			if (c == 10)
 				out.add("\n");
 			else if (c >= 32 && c < 127)
-				out.add(String.fromCharCode(c));
+				out.add(ch);
+			else if (RU_MAP.exists(ch))
+				out.add(RU_MAP.get(ch));
 			else
 				out.add("?");
 		}

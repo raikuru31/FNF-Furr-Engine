@@ -20,12 +20,21 @@ class TouchButton extends FlxSprite
 	var touchId:Int = -1;
 	var _bounds:FlxRect = FlxRect.get();
 
-	public function new(x:Float, y:Float, action:String, ?size:Int = 150)
+	/**
+	 * @param width   ширина зоны
+	 * @param height  высота зоны; -1 — квадрат шириной width
+	 * @param alpha   прозрачность заливки (0 — невидимая зона)
+	 */
+	public function new(x:Float, y:Float, action:String, ?width:Int = 150, ?height:Int = -1, ?alpha:Float = 0.22)
 	{
 		super(x, y);
 		this.action = action;
-		makeGraphic(size, size, FlxColor.WHITE);
-		alpha = 0.22;
+
+		if (height < 0)
+			height = width;
+
+		makeGraphic(width, height, FlxColor.WHITE);
+		this.alpha = alpha;
 		scrollFactor.set(0, 0);
 	}
 

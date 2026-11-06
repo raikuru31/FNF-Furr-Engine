@@ -71,4 +71,79 @@ class AssetLoader
 
 		return null;
 	}
+
+	/**
+	 * Список подпапок каталога.
+	 * На Android файловой системы с ассетами нет, поэтому если обычное чтение
+	 * не сработало — берём заранее сгенерированный <path>/songlist.json.
+	 */
+	public static function listDirs(path:String):Array<String>
+	{
+		var result:Array<String> = [];
+
+		try
+		{
+			var items:Array<String> = FileSystem.readDirectory(path);
+			for (item in items)
+				if (FileSystem.isDirectory(path + "/" + item))
+					result.push(item);
+		}
+		catch (e:Dynamic) {}
+
+		if (result.length > 0)
+			return result;
+
+		try
+		{
+			var raw:String = getText(path + "/songlist.json");
+			var parsed:Array<Dynamic> = haxe.Json.parse(raw);
+			for (item in parsed)
+				result.push(Std.string(item));
+		}
+		catch (e:Dynamic) {}
+
+		return result;
+	}
+
+	/**
+	 * Список файлов с нужным расширением.
+	 * Как и listDirs, на Android опирается на заранее сгенерированный filelist.json.
+	 */
+	public static function listFiles(path:String, ext:String):Array<String>
+	{
+		var result:Array<String> = [];
+		var want:String = ext.toLowerCase();
+		if (want.indexOf(".") == 0)
+			want = want.substr(1);
+
+		try
+		{
+			for (item in FileSystem.readDirectory(path))
+			{
+				var full:String = path + "/" + item;
+				if (!FileSystem.isDirectory(full))
+				{
+					var dot:Int = item.lastIndexOf(".");
+					var e:String = dot >= 0 ? item.substr(dot + 1).toLowerCase() : "";
+					if (e == want)
+						result.push(item);
+				}
+			}
+		}
+		catch (e:Dynamic) {}
+
+		if (result.length > 0)
+			return result;
+
+		try
+		{
+			var raw:String = getText(path + "/filelist.json");
+			var parsed:Array<Dynamic> = haxe.Json.parse(raw);
+			for (item in parsed)
+				result.push(Std.string(item));
+		}
+		catch (e:Dynamic) {}
+
+		return result;
+	}
 }

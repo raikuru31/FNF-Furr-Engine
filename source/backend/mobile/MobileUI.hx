@@ -58,6 +58,12 @@ class MobileUI
 		#if mobile
 		if (inited) return;
 		inited = true;
+
+		// Границы нажатий считаются ровно один раз за кадр, после всех update.
+		// Без этого одно касание срабатывало как несколько нажатий подряд,
+		// потому что "предыдущее состояние" не обновлялось вне PlayState.
+		FlxG.signals.postUpdate.add(backend.Controls.endTouchFrame);
+
 		FlxG.signals.postStateSwitch.add(onStateSwitch);
 		#end
 	}
@@ -70,6 +76,9 @@ class MobileUI
 
 		// В игре свои кнопки со стрелками
 		if (Std.isOfType(state, states.PlayState)) return;
+
+		// На титульном экране свои две зоны (большая + "test")
+		if (Std.isOfType(state, states.TitleState)) return;
 
 		state.add(new MenuTouchControls());
 		#end

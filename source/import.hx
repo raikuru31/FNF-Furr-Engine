@@ -1,6 +1,7 @@
 // import FlxTransWindow;
 
 import backend.AssetLoader;
+import backend.DataFile;
 import backend.ClientSetings;
 import backend.Conductor;
 // import backend.AtlasBlurShader;
