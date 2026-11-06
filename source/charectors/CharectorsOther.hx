@@ -48,7 +48,7 @@ class CharectorsOther extends FlxSprite{
         name = charactors;
         var characterPath = 'assets/images/' + states + '/'+ charactors + '.json';
         // trace(characterPath);
-        if (!(FileSystem.exists(characterPath)))
+        if (!(AssetLoader.exists(characterPath)))
         {
             notFoundPathJson.text = 'Not Found characters/' + charactors;
             notFound = true;
@@ -69,7 +69,7 @@ class CharectorsOther extends FlxSprite{
             notFoundPathJson.text = '';
         }
 
-        var charactersJson = File.getContent(characterPath).trim();
+        var charactersJson = AssetLoader.getText(characterPath).trim();
         var character:FilePersonaga = Json.parse(charactersJson);
 
         not_hold_play_animation = character.not_hold_play_animation;
@@ -85,12 +85,12 @@ class CharectorsOther extends FlxSprite{
             if(!notFound)
             {
                 imgpng = Img.load('$states/${character.image}');
-                imgxml = File.getContent('assets/images/'+ states + '/' + character.image + '.xml');
+                imgxml = AssetLoader.getText('assets/images/'+ states + '/' + character.image + '.xml');
             }
             else
             {
                 imgpng = Img.load(character.image);
-                imgxml = File.getContent('assets/images/' + character.image + '.xml');
+                imgxml = AssetLoader.getText('assets/images/' + character.image + '.xml');
             }
             if(states != "storymenu/props")
             {           

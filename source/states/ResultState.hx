@@ -81,7 +81,7 @@ class ResultState extends MusicBeatState
     override public function create():Void
     {
 
-        var data = File.getContent("data.json");
+        var data = AssetLoader.getText("data.json");
         _FullData = Json.parse(data);
 
         trace(score);

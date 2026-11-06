@@ -621,18 +621,18 @@ class PlayState extends MusicBeatState
 			var voicesPlPath:String = "assets/songs/" + curSong + "/Voices-Player.ogg";
 			var voicesPath:String = "assets/songs/" + curSong + "/Voices.ogg";
 
-			if (FileSystem.exists(voicesOpPath))
+			if (AssetLoader.exists(voicesOpPath))
 				voicesOp = new FlxSound().loadEmbedded(Sound.fromFile(voicesOpPath));
 			else
 				voicesOp = new FlxSound();
 
-			if (FileSystem.exists(voicesPlPath))
+			if (AssetLoader.exists(voicesPlPath))
 				voicesPl = new FlxSound().loadEmbedded(Sound.fromFile(voicesPlPath));
 			else
 				voicesPl = new FlxSound();
 			
 			if (voicesPl.length == 0)
-				if (FileSystem.exists(voicesPath))
+				if (AssetLoader.exists(voicesPath))
 					voicesPl.loadEmbedded(Sound.fromFile("assets/songs/" + curSong + "/Voices.ogg"));
 
 			FlxG.sound.list.add(voicesOp);

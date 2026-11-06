@@ -77,7 +77,7 @@ class Note extends FlxSprite
         }
 
         imgpng = Img.load(textyre);
-        imgxml = File.getContent('assets/images/' + textyre + '.xml');
+        imgxml = AssetLoader.getText('assets/images/' + textyre + '.xml');
 
         tex = FlxAtlasFrames.fromSparrow(imgpng,imgxml);
         frames = tex;

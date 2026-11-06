@@ -37,7 +37,7 @@ class MyStrumNote extends FlxSprite{
 		if(animation.curAnim != null) lastAnim = animation.curAnim.name;
 
 		imgpng = Img.load(textyra);
-		imgxml = File.getContent('assets/images/' + textyra + '.xml');
+		imgxml = AssetLoader.getText('assets/images/' + textyra + '.xml');
 
 		tex = FlxAtlasFrames.fromSparrow(imgpng,imgxml);
 		frames = tex;

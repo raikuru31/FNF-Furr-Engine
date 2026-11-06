@@ -27,8 +27,7 @@ class Img {
     {
         var bitmap:BitmapData = null;
 
-        if(FileSystem.exists(file))
-			bitmap = BitmapData.fromFile(file);
+        bitmap = AssetLoader.getBitmapData(file);
 
         if (bitmap == null)
         {
@@ -86,8 +85,8 @@ class Img {
     public static function loadAtlosAnimate(path:String)
     {
         var imgpng = load(path + '/spritemap1');
-        var imgjson = File.getContent('assets/images/' + path + '/spritemap1.json');
-        var imgAnim = File.getContent('assets/images/' + path + '/Animation.json');
+        var imgjson = AssetLoader.getText('assets/images/' + path + '/spritemap1.json');
+        var imgAnim = AssetLoader.getText('assets/images/' + path + '/Animation.json');
 
         var tex = FlxAnimateFrames.fromSpriteMap(imgjson, imgpng);
         var newFrames = new FlxAnimateFrames().addAtlas(tex);

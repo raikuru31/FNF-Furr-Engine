@@ -7,9 +7,9 @@ class EventJson {
     public static var pathEvent:String;
     public static function loadFromJson(nameFolder:String) {
         pathEvent = 'assets/data/' + nameFolder.toLowerCase() + '/event.json';
-        if (FileSystem.exists(pathEvent))
+        if (AssetLoader.exists(pathEvent))
         {
-            var eventFiles = File.getContent(pathEvent).trim();
+            var eventFiles = AssetLoader.getText(pathEvent).trim();
             var eventF:EventFiles = Json.parse(eventFiles);
             return eventF;
         }

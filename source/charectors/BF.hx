@@ -46,7 +46,7 @@ class BF extends FlxSprite{
     public function personagaChange(charactors:String, flipXCharectors:Bool = false)  {
         var characterPath = 'assets/characters/' + charactors + '.json';
 
-        if (!(FileSystem.exists(characterPath)))
+        if (!(AssetLoader.exists(characterPath)))
         {
             notFoundPathJson.text = 'Not Found characters/' + charactors;
             notFound = true;
@@ -67,7 +67,7 @@ class BF extends FlxSprite{
             notFoundPathJson.text = '';
         }
 
-        var charactersJson = File.getContent(characterPath).trim();
+        var charactersJson = AssetLoader.getText(characterPath).trim();
         var character:FilePersonaga = Json.parse(charactersJson);
 
         not_hold_play_animation = character.not_hold_play_animation;
@@ -81,7 +81,7 @@ class BF extends FlxSprite{
             
             trace(character.image);
             imgpng = Img.load(character.image);
-            imgxml = File.getContent('assets/images/' + character.image + '.xml');
+            imgxml = AssetLoader.getText('assets/images/' + character.image + '.xml');
             xPosCam = character.camera_position[0];
             yPosCam = character.camera_position[1];
             xPos = character.position[0];

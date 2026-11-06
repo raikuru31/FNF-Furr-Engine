@@ -36,11 +36,11 @@ class MySpleshForNote extends FlxSprite
     {
 
         var pathJson:String = 'assets/images/Splashes/' + name + '.json';
-        var spalshJson = File.getContent(pathJson).trim();
+        var spalshJson = AssetLoader.getText(pathJson).trim();
         var splash:DataSpleshs = Json.parse(spalshJson);
 
         imgpng = Img.load('Splashes/'+ splash.textyra );
-        imgxml = File.getContent('assets/images/Splashes/' + splash.textyra + '.xml');
+        imgxml = AssetLoader.getText('assets/images/Splashes/' + splash.textyra + '.xml');
 
         animOffsets = new Map<String, Array<Dynamic>>(); 
 

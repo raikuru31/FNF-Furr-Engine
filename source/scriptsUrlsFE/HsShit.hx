@@ -85,7 +85,7 @@ class HsShit
         intShit.variables.set("loadAnimImage", 
                                 function(sprite:FlxSprite, path:String) {
                                         var imgpng = Img.load(path);
-                                        var imgxml = File.getContent('assets/images/' + path + '.xml');
+                                        var imgxml = AssetLoader.getText('assets/images/' + path + '.xml');
                                         var tex = FlxAtlasFrames.fromSparrow(imgpng, imgxml);
                                         sprite.frames = tex;
                                 });
@@ -277,7 +277,7 @@ class HsShit
 
     public function loadScriptFile(path:String):String 
     {
-        return File.getContent(path); // Читаем файл как текст
+        return AssetLoader.getText(path); // Читаем файл как текст
     }
 
     public function loadScript(script:Expr)

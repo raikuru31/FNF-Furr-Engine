@@ -21,10 +21,10 @@ class HealthIcon extends FlxSprite{
     {
         if(this.charector != charector) {
             var pathIcon = 'icons/icon-' + charector ;
-            if (!(FileSystem.exists("assets/images/" + pathIcon + ".png")))
+            if (!(AssetLoader.exists("assets/images/" + pathIcon + ".png")))
                 pathIcon = 'icons/' + charector;
 
-            if (!(FileSystem.exists("assets/images/" + pathIcon + ".png")))
+            if (!(AssetLoader.exists("assets/images/" + pathIcon + ".png")))
                 pathIcon = 'icons/icon-cat';
 
             var graphic = Img.load(pathIcon);

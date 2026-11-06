@@ -50,7 +50,7 @@ class LevelSelect extends MusicBeatState
     {	
         _skipCFT = true;
 
-        var data = File.getContent("data.json").trim();
+        var data = AssetLoader.getText("data.json").trim();
         _FullData = Json.parse(data);
 
         var path = "assets/data";

@@ -188,7 +188,7 @@ class StoryState extends MusicBeatState
 
     function createDef(def:String) {
         var defPath:String = "assets/images/storymenu/difficulties/" + def +".png";
-        if(FileSystem.exists(defPath))
+        if(AssetLoader.exists(defPath))
         {        
             var spr:FlxSprite = new FlxSprite(ui[0].x+50, ui[0].y + 5).loadGraphic(defPath);
             spr.alpha = 0.000001;

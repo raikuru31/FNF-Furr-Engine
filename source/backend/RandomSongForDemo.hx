@@ -8,7 +8,7 @@ class RandomSongForDemo {
         var path = "assets/data"; // Укажите нужный путь
 		
         // Проверяем, существует ли директория
-        if (!FileSystem.exists(path)){
+        if (!AssetLoader.exists(path)){
             trace("Директория не существует!");
             return;
         }

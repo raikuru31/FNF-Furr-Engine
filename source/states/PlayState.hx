@@ -1228,18 +1228,18 @@ class PlayState extends MusicBeatState
 			var voicesPlPath:String = "assets/songs/" + songName + "/Voices-Player.ogg";
 			var voicesPath:String = "assets/songs/" + songName + "/Voices.ogg";
 
-			if (FileSystem.exists(voicesOpPath))
+			if (AssetLoader.exists(voicesOpPath))
 				voicesOp = new FlxSound().loadEmbedded(Sound.fromFile(voicesOpPath));
 			else
 				voicesOp = new FlxSound();
 
-			if (FileSystem.exists(voicesPlPath))
+			if (AssetLoader.exists(voicesPlPath))
 				voicesPl = new FlxSound().loadEmbedded(Sound.fromFile(voicesPlPath));
 			else
 				voicesPl = new FlxSound();
 			
 			if (voicesPl.length == 0)
-				if (FileSystem.exists(voicesPath))
+				if (AssetLoader.exists(voicesPath))
 					voicesPl.loadEmbedded(Sound.fromFile(voicesPath));
 
 			FlxG.sound.list.add(voicesOp);
@@ -1249,9 +1249,9 @@ class PlayState extends MusicBeatState
 			var deadSfxPath:String = 'assets/sounds/fnf_loss_sfx.ogg';
 			var deadSongPath:String = 'assets/music/gameOver.ogg';
 
-			if (FileSystem.exists(deadSfxPath))
+			if (AssetLoader.exists(deadSfxPath))
 				deadSfx = new FlxSound().loadEmbedded(Sound.fromFile(deadSfxPath));
-			if (FileSystem.exists(deadSongPath))
+			if (AssetLoader.exists(deadSongPath))
 				deadSong = new FlxSound().loadEmbedded(Sound.fromFile(deadSongPath));
 			
 			FlxG.sound.list.add(deadSfx);
@@ -2380,7 +2380,7 @@ class PlayState extends MusicBeatState
 
 	public function initHxScript(file:String) {
 
-		if (!(FileSystem.exists(file))) return;
+		if (!(AssetLoader.exists(file))) return;
 
 		var scriptsString:String;
 		#if !neko

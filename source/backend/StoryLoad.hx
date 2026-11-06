@@ -8,7 +8,7 @@ class StoryLoad {
     
     public static function loadWeek(folder:String) {
         var weekPath:String = 'assets/weeks/$folder';
-        var weekJson = File.getContent(weekPath).trim();
+        var weekJson = AssetLoader.getText(weekPath).trim();
         var weekData:StoryWeek = Json.parse(weekJson);
         return weekData;
     }
@@ -17,7 +17,7 @@ class StoryLoad {
     var files = [];
     
     // Проверка существования директории
-    if (!FileSystem.exists(directoryPath) || !FileSystem.isDirectory(directoryPath)) {
+    if (!AssetLoader.exists(directoryPath) || !FileSystem.isDirectory(directoryPath)) {
         throw "Директория не существует или путь ведёт к файлу";
     }
 

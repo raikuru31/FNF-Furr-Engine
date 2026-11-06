@@ -51,9 +51,9 @@ class Stagebg extends FlxSprite {
     public function new(stage:String = 'stage') {
         super();
         var path = 'assets/stage/' + stage + '.json';
-        if (!(FileSystem.exists(path)))
+        if (!(AssetLoader.exists(path)))
             path = 'assets/stage/stage.json';
-        var stageJson = File.getContent(path).trim();
+        var stageJson = AssetLoader.getText(path).trim();
         var stages:Stage = Json.parse(stageJson);
 
         spriteGroup = new FlxGroup();
