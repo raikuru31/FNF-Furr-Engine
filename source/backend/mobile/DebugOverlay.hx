@@ -12,9 +12,9 @@ import openfl.system.System;
 class DebugOverlay extends FlxSpriteGroup
 {
 	var txt:FlxText;
-	var frames:Int = 0;
-	var acc:Float = 0;
-	var fps:Int = 0;
+	var _frames:Int = 0;
+	var _acc:Float = 0;
+	var _fps:Int = 0;
 
 	public function new()
 	{
@@ -31,13 +31,13 @@ class DebugOverlay extends FlxSpriteGroup
 	{
 		super.update(elapsed);
 
-		frames++;
-		acc += elapsed;
-		if (acc >= 0.5)
+		_frames++;
+		_acc += elapsed;
+		if (_acc >= 0.5)
 		{
-			fps = Std.int(frames / acc + 0.5);
-			frames = 0;
-			acc = 0;
+			_fps = Std.int(_frames / _acc + 0.5);
+			_frames = 0;
+			_acc = 0;
 		}
 
 		var ramMb:Int = Std.int(System.totalMemory / (1024 * 1024));
@@ -58,6 +58,6 @@ class DebugOverlay extends FlxSpriteGroup
 		target = 'mobile';
 		#end
 
-		txt.text = 'FPS ' + fps + '   |   RAM ' + ramMb + ' MB   |   FurrEngine ' + states.TitleState.verEngine + '   |   ' + backend + ' / ' + target;
+		txt.text = 'FPS ' + _fps + '   |   RAM ' + ramMb + ' MB   |   FurrEngine ' + states.TitleState.verEngine + '   |   ' + backend + ' / ' + target;
 	}
 }
