@@ -16,6 +16,8 @@ import sys.FileSystem;
  */
 class Error
 {
+	static inline var APP_PACKAGE:String = 'com.Lycur.FurrEngine';
+
 	public static var NameError:String = '';
 	public static var infoError:String = '';
 
@@ -78,16 +80,27 @@ class Error
 	static function writeLog(text:String, stamp:String):String
 	{
 		var dirs:Array<String> = [];
-
-		try dirs.push(LimeSystem.applicationStorageDirectory + "Crash_Engine/") catch (e:Dynamic) {}
-		try dirs.push(LimeSystem.documentsDirectory + "/Crash_Engine/") catch (e:Dynamic) {}
+		var ext:String = "";
 		try
 		{
-			var ext:String = Sys.getEnv("EXTERNAL_STORAGE");
-			if (ext != null && ext != "")
-				dirs.push(ext + "/Download/Crash_Engine/");
+			var e:String = Sys.getEnv("EXTERNAL_STORAGE");
+			if (e != null && e != "")
+				ext = e;
 		}
 		catch (e:Dynamic) {}
+
+		// 1) Только для этого приложения, но видно в файловых менеджерах
+		if (ext != "")
+			dirs.push(ext + "/Android/media/" + APP_PACKAGE + "/.Lycur/");
+		// 2) .Lycur в корне хранилища (если выдано «Доступ ко всем файлам»)
+		if (ext != "")
+			dirs.push(ext + "/.Lycur/");
+		// 3) .Lycur в «Загрузках» (то же условие)
+		if (ext != "")
+			dirs.push(ext + "/Download/.Lycur/");
+		// 4) Внутренние папки приложения — работают всегда
+		try dirs.push(LimeSystem.applicationStorageDirectory + "Crash_Engine/") catch (e:Dynamic) {}
+		try dirs.push(LimeSystem.documentsDirectory + "/Crash_Engine/") catch (e:Dynamic) {}
 
 		var name:String = "Crash_FurrEngine_" + stamp + ".txt";
 
