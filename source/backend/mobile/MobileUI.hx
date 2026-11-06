@@ -80,9 +80,6 @@ class MobileUI
 		// На титульном экране свои зоны
 		if (Std.isOfType(state, states.TitleState)) return;
 
-		// В настройках своё управление мышью/касанием — панель там лишняя
-		if (Std.isOfType(state, states.OptinsState)) return;
-
 		// Важно: панель привязываем к одной камере, иначе при нескольких
 		// камерах она рисуется по разу на каждой и выглядит как дубли
 		var pad:MenuTouchControls = new MenuTouchControls();

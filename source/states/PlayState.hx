@@ -25,6 +25,8 @@ import objects.Note;
 import objects.HealthIcon;
 import objects.Visualizer;
 import backend.mobile.PlayTouch;
+import backend.mobile.TouchArrows;
+import backend.mobile.DebugOverlay;
 
 import charectors.BF;
 
@@ -116,6 +118,8 @@ class PlayState extends MusicBeatState
 	// Сенсорное управление для мобильной сборки
 	#if mobile
 	public var playTouch:PlayTouch 								= null;
+	public var touchArrows:TouchArrows 							= null;
+	public var debugOverlay:DebugOverlay 						= null;
 	#end
 
 	private var notes:FlxTypedGroup<Note>						= null;
@@ -300,6 +304,16 @@ class PlayState extends MusicBeatState
 		// Экранное управление: четыре вертикальные зоны на всю высоту экрана
 		playTouch = new PlayTouch();
 		add(playTouch);
+
+		// Видимые стрелки-подсказки внизу экрана
+		touchArrows = new TouchArrows();
+		touchArrows.cameras = [camHUD];
+		add(touchArrows);
+
+		// FPS / память / версия / платформа
+		debugOverlay = new DebugOverlay();
+		debugOverlay.cameras = [camHUD];
+		add(debugOverlay);
 		#end
 
 		setForScript("defPosNotePlayerX", playerStrums.members[0].x);
@@ -976,13 +990,13 @@ class PlayState extends MusicBeatState
 
 		if (voicesPl != null && voicesPl.length > 0 && voicesPl.playing)
 		{
-			if (force || Math.abs(voicesPl.time - target) > 80)
+			if (force || Math.abs(voicesPl.time - target) > 20)
 				voicesPl.time = target;
 		}
 
 		if (voicesOp != null && voicesOp.length > 0 && voicesOp.playing)
 		{
-			if (force || Math.abs(voicesOp.time - target) > 80)
+			if (force || Math.abs(voicesOp.time - target) > 20)
 				voicesOp.time = target;
 		}
 	}
@@ -2146,7 +2160,13 @@ class PlayState extends MusicBeatState
 		//нажата ли клавиша
 		for (i in 0...pressArray.length)
 			if(pressArray[i])
+			{
 				keyPresed(i);
+				#if mobile
+				if (touchArrows != null)
+					touchArrows.hit(keysArray[i]);
+				#end
+			}
 
 		if (generatedMusic && notes.length > 0)
 			{

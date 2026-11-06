@@ -83,7 +83,7 @@ class Main extends Sprite
 
 		#if mobile
 		// Заполняем экран целиком: без чёрных полос по краям на широких экранах
-		FlxG.scaleMode = new RatioScaleMode();
+		FlxG.scaleMode = new RatioScaleMode(true);
 		#end
 
 		FlxG.fixedTimestep = false;
