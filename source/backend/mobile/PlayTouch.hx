@@ -17,7 +17,7 @@ import backend.Controls;
  */
 class PlayTouch extends FlxBasic
 {
-	public static inline var ACTIONS:Array<String> = ['note_left', 'note_down', 'note_up', 'note_right'];
+	public static var ACTIONS:Array<String> = ['note_left', 'note_down', 'note_up', 'note_right'];
 
 	/** Зона паузы: правый верхний угол, в пикселях окна. */
 	public var pauseZoneW:Float = 170;
