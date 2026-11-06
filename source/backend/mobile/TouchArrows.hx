@@ -19,7 +19,7 @@ class TouchArrows extends FlxSpriteGroup
 	public static var ACTIONS:Array<String> = ['note_left', 'note_down', 'note_up', 'note_right'];
 
 	var arrows:Array<FlxText> = [];
-	var flash:Map<String, Float> = [];
+	var flash:Array<Float> = [0.0, 0.0, 0.0, 0.0];
 	var pauseIcon:FlxText = null;
 
 	public function new()
@@ -39,7 +39,7 @@ class TouchArrows extends FlxSpriteGroup
 			t.scrollFactor.set(0, 0);
 			add(t);
 			arrows.push(t);
-			flash.set(ACTIONS[i], 0.0);
+			flash[i] = 0.0;
 		}
 
 		// Видимая иконка паузы в правом верхнем углу — там же, где зона нажатия
@@ -53,7 +53,9 @@ class TouchArrows extends FlxSpriteGroup
 	/** Подсветить стрелку при попадании в ноту. */
 	public function hit(action:String):Void
 	{
-		flash.set(action, 0.25);
+		var idx:Int = ACTIONS.indexOf(action);
+		if (idx >= 0)
+			flash[idx] = 0.25;
 	}
 
 	override public function update(elapsed:Float):Void
@@ -64,13 +66,12 @@ class TouchArrows extends FlxSpriteGroup
 		{
 			var action:String = ACTIONS[i];
 			var down:Bool = Controls.touchIsDown(action);
-			var f:Float = flash.get(action);
-			if (f == null) f = 0;
+			var f:Float = flash[i];
 			if (f > 0)
 			{
 				f -= elapsed;
 				if (f < 0) f = 0;
-				flash.set(action, f);
+				flash[i] = f;
 			}
 
 			var active:Bool = down || f > 0;
