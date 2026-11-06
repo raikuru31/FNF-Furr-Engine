@@ -66,7 +66,9 @@ class Main extends Sprite
 
 	function setupGame():Void
 	{
-		
+		// Ловим ошибки ДО создания игры: иначе падение при инициализации
+		// первого состояния останется без лога
+		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, Error.onError);
 
 		var game:FlxGame = new FlxGame(gameSettings.width, gameSettings.height, gameSettings.initialState,  gameSettings.framerate, gameSettings.framerate, gameSettings.skipSplash, gameSettings.startFullscreen);
 		addChild(game);
@@ -84,10 +86,9 @@ class Main extends Sprite
 		Controls.instance = new Controls();
 
 		// Экранное управление для меню (мобильная сборка)
-		objects.MobileUI.init();
+		backend.mobile.MobileUI.init();
 
 		// FlxG.game.focusLostFramerate = 60;
-		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, Error.onError);
 	}
 }
 

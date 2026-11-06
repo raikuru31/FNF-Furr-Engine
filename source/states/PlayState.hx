@@ -24,7 +24,7 @@ import objects.MySpleshForNote;
 import objects.Note;
 import objects.HealthIcon;
 import objects.Visualizer;
-import objects.TouchControls;
+import backend.mobile.TouchControls;
 
 import charectors.BF;
 
