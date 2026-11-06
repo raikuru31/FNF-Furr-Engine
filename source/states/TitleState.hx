@@ -155,6 +155,7 @@ class TitleState extends MusicBeatState
         big.cameras = [camHUD];
         add(big);
     }
+    #end
 
     var animEnter:Bool                  = false;
     override public function update(elapsed:Float) 
