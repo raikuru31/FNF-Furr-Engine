@@ -46,10 +46,6 @@ class TitleState extends MusicBeatState
         persistentUpdate = true;
 		persistentDraw = true;
 
-        #if mobile
-        addTitleButtons();
-        #end
-
         // Conductor.songPosition = 0;
         camGame = new FlxCamera();
 		camGame.bgColor = FlxColor.BLACK;
@@ -63,6 +59,10 @@ class TitleState extends MusicBeatState
         camHUD.x = 0;
         camHUD.y = 0;
         FlxG.cameras.add(camHUD);
+
+        #if mobile
+        addTitleButtons();
+        #end
     
         whileColor = new FlxSprite();
         whileColor.makeGraphic(FlxG.width, FlxG.height,FlxColor.fromString('#FFFFFF'));
@@ -130,11 +130,6 @@ class TitleState extends MusicBeatState
         // ABot.snd = FlxG.sound.music;
 
 
-        if (controls.justPressed('BACK'))
-        {
-            SwitshState.switchState(new Watafak());
-        }
-
         if (FlxG.sound.music != null) 
             Conductor.songPosition = FlxG.sound.music.time;
 
@@ -150,30 +145,16 @@ class TitleState extends MusicBeatState
 
     #if mobile
     /**
-     * Мобильные кнопки титульного экрана:
-     *  - большая невидимая зона -> ACCEPT (вход в главное меню);
-     *  - маленькая кнопка "test" в углу -> BACK (как раньше по клавише).
+     * Мобильная зона титульного экрана: тап в любом месте = ACCEPT
+     * (переход в главное меню).
      */
     function addTitleButtons():Void
     {
-        var big:TouchButton = new TouchButton(0, 0, 'ACCEPT', Std.int(FlxG.width), Std.int(FlxG.height - 170), 0.0);
+        // Большая невидимая зона: любой тап по экрану = ACCEPT (вход в меню)
+        var big:TouchButton = new TouchButton(0, 0, 'ACCEPT', Std.int(FlxG.width), Std.int(FlxG.height), 0.0);
         big.cameras = [camHUD];
         add(big);
-
-        var bx:Float = FlxG.width - 180;
-        var by:Float = FlxG.height - 150;
-
-        var test:TouchButton = new TouchButton(bx, by, 'BACK', 160, 100, 0.45);
-        test.cameras = [camHUD];
-        add(test);
-
-        var label:FlxText = new FlxText(bx, by + 32, 160, 'test', 32);
-        label.setFormat(null, 32, FlxColor.WHITE, CENTER);
-        label.scrollFactor.set(0, 0);
-        label.cameras = [camHUD];
-        add(label);
     }
-    #end
 
     var animEnter:Bool                  = false;
     override public function update(elapsed:Float) 
