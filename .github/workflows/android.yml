@@ -28,8 +28,13 @@ jobs:
         run: |
           yes | sdkmanager --licenses > /dev/null || true
           sdkmanager "ndk;21.4.7075529" "platforms;android-33" "build-tools;33.0.2"
+          # lime ищет именно эти имена: ANDROID_SDK, ANDROID_NDK_ROOT,
+          # а флаг ANDROID_SETUP заменяет интерактивный "lime setup android"
+          echo "ANDROID_HOME=$ANDROID_SDK_ROOT" >> "$GITHUB_ENV"
+          echo "ANDROID_SDK=$ANDROID_SDK_ROOT" >> "$GITHUB_ENV"
           echo "ANDROID_NDK_HOME=$ANDROID_SDK_ROOT/ndk/21.4.7075529" >> "$GITHUB_ENV"
           echo "ANDROID_NDK_ROOT=$ANDROID_SDK_ROOT/ndk/21.4.7075529" >> "$GITHUB_ENV"
+          echo "ANDROID_SETUP=1" >> "$GITHUB_ENV"
 
       - name: Haxe
         uses: krdlab/setup-haxe@master
