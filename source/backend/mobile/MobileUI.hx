@@ -77,10 +77,17 @@ class MobileUI
 		// В игре свои кнопки со стрелками
 		if (Std.isOfType(state, states.PlayState)) return;
 
-		// На титульном экране свои две зоны (большая + "test")
+		// На титульном экране свои зоны
 		if (Std.isOfType(state, states.TitleState)) return;
 
-		state.add(new MenuTouchControls());
+		// В настройках своё управление мышью/касанием — панель там лишняя
+		if (Std.isOfType(state, states.OptinsState)) return;
+
+		// Важно: панель привязываем к одной камере, иначе при нескольких
+		// камерах она рисуется по разу на каждой и выглядит как дубли
+		var pad:MenuTouchControls = new MenuTouchControls();
+		pad.cameras = [FlxG.camera];
+		state.add(pad);
 		#end
 	}
 }

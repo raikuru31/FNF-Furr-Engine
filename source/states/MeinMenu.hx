@@ -62,12 +62,37 @@ class MeinMenu extends MusicBeatState
     }
 
     var blocControl:Bool                = false;
+    var tapAccept:Bool                  = false;
     override public function update(elapsed:Float) 
     {
         if (FlxG.sound.music != null) 
             Conductor.songPosition = FlxG.sound.music.time;
 
         super.update(elapsed);
+
+        #if mobile
+        // Касание по пункту меню: первый раз — выбрать, второй — активировать
+        if (!blocControl && FlxG.mouse.justReleased)
+        {
+            for (i in 0...menuItems.length)
+            {
+                if (FlxG.mouse.overlaps(menuItems[i]))
+                {
+                    if (select != i)
+                    {
+                        select = i;
+                        onSelectMenu();
+                    }
+                    else
+                    {
+                        tapAccept = true;
+                    }
+                    break;
+                }
+            }
+        }
+        #end
+
         if(!blocControl)
         {
             if(controls.justPressed('ui_up'))
@@ -90,8 +115,9 @@ class MeinMenu extends MusicBeatState
                 // trace(select);
             }
             
-            if (controls.justPressed('ACCEPT')) 
+            if (controls.justPressed('ACCEPT') || tapAccept) 
             {
+                tapAccept = false;
                 blocControl = true;
                 
                 if (menu[select] == 'freeplay')

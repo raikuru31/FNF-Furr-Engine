@@ -24,7 +24,7 @@ import objects.MySpleshForNote;
 import objects.Note;
 import objects.HealthIcon;
 import objects.Visualizer;
-import backend.mobile.TouchControls;
+import backend.mobile.PlayTouch;
 
 import charectors.BF;
 
@@ -113,9 +113,9 @@ class PlayState extends MusicBeatState
 	public var dadStrums:FlxTypedGroup<MyStrumNote> 			= new FlxTypedGroup<MyStrumNote>();
 	public var spleshPlayer:FlxTypedGroup<MySpleshForNote> 		= new FlxTypedGroup<MySpleshForNote>();
 
-	// Виртуальные кнопки для мобильной сборки
+	// Сенсорное управление для мобильной сборки
 	#if mobile
-	public var touchControls:TouchControls 						= null;
+	public var playTouch:PlayTouch 								= null;
 	#end
 
 	private var notes:FlxTypedGroup<Note>						= null;
@@ -297,10 +297,9 @@ class PlayState extends MusicBeatState
 		generateStaticArrows(1);
 
 		#if mobile
-		// Экранное управление: четыре кнопки поверх HUD-камеры
-		touchControls = new TouchControls();
-		touchControls.cameras = [camHUD];
-		add(touchControls);
+		// Экранное управление: четыре вертикальные зоны на всю высоту экрана
+		playTouch = new PlayTouch();
+		add(playTouch);
 		#end
 
 		setForScript("defPosNotePlayerX", playerStrums.members[0].x);
@@ -542,6 +541,14 @@ class PlayState extends MusicBeatState
 	{
 		super.update(elapsed);
 
+		#if mobile
+		if (playTouch != null)
+		{
+			playTouch.menuMode = openPauseMenu;
+			playTouch.acceptAnywhere = youDead && !deadEndNow;
+		}
+		#end
+
 		// if (controls.justReleased('note_up'))
 		// 	trace('1');
 
@@ -699,6 +706,10 @@ class PlayState extends MusicBeatState
 		
 		if (generatedMusic && !openPauseMenu && !youDead)
 		{
+			#if mobile
+			syncVoices(false);
+			#end
+
 			callForScript("onUpdate", elapsed);
 
 			ChekKey();
@@ -936,9 +947,11 @@ class PlayState extends MusicBeatState
 			voicesOp.play();
 		if (voicesPl.length > 0)
 			voicesPl.play();
-		
-		// voicesOp.time = inst.time;
-		// voicesPl.time = inst.time;
+
+		// Голоса стартуют на несколько кадров позже инструментала, из-за чего
+		// на слабых устройствах рассинхрон слышен сразу. Подтягиваем их к
+		// текущей позиции инструментала.
+		syncVoices(true);
 
 		setForScript("dataMusic", FlxG.sound.music);
 
@@ -950,6 +963,30 @@ class PlayState extends MusicBeatState
 		}
 	}
 	
+	/**
+	 * Подтягивает голоса к инструменталу.
+	 * @param force  выставить позицию принудительно (сразу после старта)
+	 */
+	public function syncVoices(force:Bool = false):Void
+	{
+		if (FlxG.sound.music == null)
+			return;
+
+		var target:Float = FlxG.sound.music.time;
+
+		if (voicesPl != null && voicesPl.length > 0 && voicesPl.playing)
+		{
+			if (force || Math.abs(voicesPl.time - target) > 80)
+				voicesPl.time = target;
+		}
+
+		if (voicesOp != null && voicesOp.length > 0 && voicesOp.playing)
+		{
+			if (force || Math.abs(voicesOp.time - target) > 80)
+				voicesOp.time = target;
+		}
+	}
+
 	override function stepHit() 
 	{
 		super.stepHit();
