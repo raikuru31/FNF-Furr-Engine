@@ -8,7 +8,6 @@ import debug.FPSCounter;
 #end
 #end
 import flixel.FlxGame;
-import flixel.system.scaleModes.RatioScaleMode;
 import openfl.display.Sprite;
 
 import openfl.Lib;
@@ -79,11 +78,6 @@ class Main extends Sprite
 				fpsVar = new FPSCounter(10, 3, 0xFFFFFF);
 				addChild(fpsVar);
 			#end
-		#end
-
-		#if mobile
-		// Заполняем экран целиком: без чёрных полос по краям на широких экранах
-		FlxG.scaleMode = new RatioScaleMode(true);
 		#end
 
 		FlxG.fixedTimestep = false;

@@ -27,6 +27,7 @@ import objects.Visualizer;
 import backend.mobile.PlayTouch;
 import backend.mobile.TouchArrows;
 import backend.mobile.DebugOverlay;
+import backend.mobile.TouchZonesDebug;
 
 import charectors.BF;
 
@@ -120,6 +121,7 @@ class PlayState extends MusicBeatState
 	public var playTouch:PlayTouch 								= null;
 	public var touchArrows:TouchArrows 							= null;
 	public var debugOverlay:DebugOverlay 						= null;
+	public var touchZones:TouchZonesDebug 						= null;
 	#end
 
 	private var notes:FlxTypedGroup<Note>						= null;
@@ -314,6 +316,11 @@ class PlayState extends MusicBeatState
 		debugOverlay = new DebugOverlay();
 		debugOverlay.cameras = [camHUD];
 		add(debugOverlay);
+
+		// Подсветка зон касания (отладка)
+		touchZones = new TouchZonesDebug();
+		touchZones.cameras = [camHUD];
+		add(touchZones);
 		#end
 
 		setForScript("defPosNotePlayerX", playerStrums.members[0].x);
