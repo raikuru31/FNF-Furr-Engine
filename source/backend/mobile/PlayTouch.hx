@@ -6,27 +6,27 @@ import flixel.input.touch.FlxTouch;
 import backend.Controls;
 
 /**
- * Сенсорное управление для самого геймплея (PlayState).
+ * Сенсорное управление геймплеем.
  *
- * Никаких камер и спрайтов: попадания считаются в координатах окна
- * (FlxG.stage.stageWidth/stageHeight), поэтому кнопки работают независимо от
- * того, сколько камер в состоянии и какая из них куда смотрит.
- *
- * Четыре вертикальные зоны на всю высоту экрана — по одной на стрелку,
- * плюс отдельная зона паузы в правом верхнем углу.
+ * Зоны считаются в координатах ИГРОВОГО поля (не окна): четыре колонки
+ * шириной ZONE_W, выровненные по центру, на всю высоту, плюс угол паузы.
+ * Касание переводится из координат окна через ScreenMap, поэтому нажатия
+ * по чёрным полям больше не засчитываются.
  */
 class PlayTouch extends FlxBasic
 {
 	public static var ACTIONS:Array<String> = ['note_left', 'note_down', 'note_up', 'note_right'];
 
-	/** Зона паузы: правый верхний угол, в пикселях окна. */
-	public var pauseZoneW:Float = 170;
-	public var pauseZoneH:Float = 150;
+	public static inline var ZONE_W:Float = 150;
+	public static inline var ZONE_GAP:Float = 16;
+
+	public static inline var PAUSE_W:Float = 170;
+	public static inline var PAUSE_H:Float = 150;
 
 	/** Когда персонаж умер, любое касание = ACCEPT (возрождение). */
 	public var acceptAnywhere:Bool = false;
 
-	/** Режим меню паузы: верх экрана = вверх, низ = вниз, середина = выбор. */
+	/** Режим меню паузы: верх = вверх, низ = вниз, середина = выбор. */
 	public var menuMode:Bool = false;
 
 	public function new()
@@ -34,23 +34,17 @@ class PlayTouch extends FlxBasic
 		super();
 	}
 
-	inline function stageW():Float
+	/** X-координата зоны ноты в координатах игры. */
+	public static function zoneX(index:Int):Float
 	{
-		return FlxG.stage.stageWidth > 0 ? FlxG.stage.stageWidth : FlxG.width;
-	}
-
-	inline function stageH():Float
-	{
-		return FlxG.stage.stageHeight > 0 ? FlxG.stage.stageHeight : FlxG.height;
+		var total:Float = 4 * ZONE_W + 3 * ZONE_GAP;
+		var start:Float = (FlxG.width - total) / 2;
+		return start + index * (ZONE_W + ZONE_GAP);
 	}
 
 	override public function update(elapsed:Float):Void
 	{
 		super.update(elapsed);
-
-		var w:Float = stageW();
-		var h:Float = stageH();
-		var colW:Float = w / 4;
 
 		var held:Map<String, Bool> = [];
 		for (a in ACTIONS)
@@ -65,8 +59,8 @@ class PlayTouch extends FlxBasic
 			if (!touch.pressed)
 				continue;
 
-			var x:Float = touch.screenX;
-			var y:Float = touch.screenY;
+			var x:Float = ScreenMap.toGameX(touch.screenX);
+			var y:Float = ScreenMap.toGameY(touch.screenY);
 
 			if (acceptAnywhere)
 			{
@@ -76,27 +70,30 @@ class PlayTouch extends FlxBasic
 
 			if (menuMode)
 			{
-				if (y < h * 0.3)
+				if (y < FlxG.height * 0.3)
 					held.set('ui_up', true);
-				else if (y > h * 0.7)
+				else if (y > FlxG.height * 0.7)
 					held.set('ui_down', true);
 				else
 					held.set('ACCEPT', true);
 				continue;
 			}
 
-			// Угол паузы не должен засчитываться как нота
-			if (x >= w - pauseZoneW && y <= pauseZoneH)
+			if (x >= FlxG.width - PAUSE_W && y <= PAUSE_H)
 			{
 				held.set('PAUSE', true);
 				continue;
 			}
 
-			var index:Int = Std.int(x / colW);
-			if (index < 0) index = 0;
-			if (index > 3) index = 3;
-
-			held.set(ACTIONS[index], true);
+			for (i in 0...4)
+			{
+				var zx:Float = zoneX(i);
+				if (x >= zx && x <= zx + ZONE_W)
+				{
+					held.set(ACTIONS[i], true);
+					break;
+				}
+			}
 		}
 
 		for (a in ACTIONS)
@@ -122,5 +119,7 @@ class PlayTouch extends FlxBasic
 			Controls.touchUp(a);
 		Controls.touchUp('PAUSE');
 		Controls.touchUp('ACCEPT');
+		Controls.touchUp('ui_up');
+		Controls.touchUp('ui_down');
 	}
 }

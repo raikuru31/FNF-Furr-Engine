@@ -4,14 +4,10 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxText;
-import flixel.util.FlxColor;
 
 /**
  * Отладочная визуализация зон касания.
- *
- * Зоны считаются в координатах окна (как в PlayTouch), а рисуются в координатах
- * игры: пересчитываем через масштаб и поля, которые добавляет letterbox.
- * Нужно, чтобы глазами видеть, куда реально попадает палец.
+ * Рисуется в координатах игры — ровно там же, где PlayTouch считает попадания.
  */
 class TouchZonesDebug extends FlxSpriteGroup
 {
@@ -46,51 +42,19 @@ class TouchZonesDebug extends FlxSpriteGroup
 	{
 		super.update(elapsed);
 
-		var sw:Float = FlxG.stage.stageWidth;
-		var sh:Float = FlxG.stage.stageHeight;
-		if (sw <= 0 || sh <= 0)
-			return;
-		if (sw == 0 || sh == 0)
-			return;
-
-		var gw:Float = FlxG.width;
-		var gh:Float = FlxG.height;
-		var scale:Float = Math.min(sw / gw, sh / gh);
-		if (scale <= 0)
-			return;
-
-		var offsetX:Float = (sw - gw * scale) / 2;
-		var offsetY:Float = (sh - gh * scale) / 2;
-
-		var colW:Float = sw / 4;
-
 		for (i in 0...4)
-		{
-			var sx:Float = colW * i;
-			var sy:Float = 0.0;
-			var sWidth:Float = colW;
-			var sHeight:Float = sh;
-			apply(i, sx, sy, sWidth, sHeight, scale, offsetX, offsetY);
-		}
+			place(i, PlayTouch.zoneX(i), 0, PlayTouch.ZONE_W, FlxG.height);
 
-		// Зона паузы
-		var pw:Float = 170;
-		var ph:Float = 150;
-		apply(4, sw - pw, 0, pw, ph, scale, offsetX, offsetY);
+		place(4, FlxG.width - PlayTouch.PAUSE_W, 0, PlayTouch.PAUSE_W, PlayTouch.PAUSE_H);
 	}
 
-	function apply(index:Int, sx:Float, sy:Float, sWidth:Float, sHeight:Float, scale:Float, offsetX:Float, offsetY:Float):Void
+	function place(index:Int, x:Float, y:Float, w:Float, h:Float):Void
 	{
-		var gx:Float = (sx - offsetX) / scale;
-		var gy:Float = (sy - offsetY) / scale;
-		var gwid:Float = sWidth / scale;
-		var ghei:Float = sHeight / scale;
-
 		var r:FlxSprite = rects[index];
-		r.setPosition(gx, gy);
-		r.setGraphicSize(Std.int(gwid), Std.int(ghei));
+		r.setPosition(x, y);
+		r.setGraphicSize(Std.int(w), Std.int(h));
 		r.updateHitbox();
 
-		labels[index].setPosition(gx + 10, gy + 10);
+		labels[index].setPosition(x + 8, y + 8);
 	}
 }

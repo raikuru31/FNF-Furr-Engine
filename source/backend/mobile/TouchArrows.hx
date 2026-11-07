@@ -2,55 +2,78 @@ package backend.mobile;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.graphics.frames.FlxAtlasFrames;
 import flixel.group.FlxSpriteGroup;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import backend.Controls;
 
 /**
- * Видимые подсказки-стрелки внизу экрана.
+ * Видимые стрелки под зонами касания.
  *
- * Сами зоны нажатия невидимые и лежат в координатах окна (см. PlayTouch),
- * а этот слой нужен игроку, чтобы понимать, куда жать: стрелки подсвечиваются,
- * когда зона нажата, и мигают при попадании в ноту.
+ * Берём настоящие спрайты из NOTE_assets: серая стрелка в покое, цветная —
+ * когда зона нажата или было попадание. Стоят ровно под своими хитбоксами.
  */
 class TouchArrows extends FlxSpriteGroup
 {
 	public static var ACTIONS:Array<String> = ['note_left', 'note_down', 'note_up', 'note_right'];
 
-	var arrows:Array<FlxText> = [];
+	static var IDLE_FRAMES:Array<String> = ['arrowLEFT0000', 'arrowDOWN0000', 'arrowUP0000', 'arrowRIGHT0000'];
+	static var PRESS_FRAMES:Array<String> = ['left press0000', 'down press0000', 'up press0000', 'right press0000'];
+
+	var arrows:Array<FlxSprite> = [];
 	var flash:Array<Float> = [0.0, 0.0, 0.0, 0.0];
 	var pauseIcon:FlxText = null;
+	var atlas:FlxAtlasFrames = null;
 
 	public function new()
 	{
 		super();
 
-		var labels:Array<String> = ['←', '↓', '↑', '→'];
-		var size:Int = 96;
-		var y:Float = FlxG.height - size - 40;
-		var step:Float = (FlxG.width - 120) / 4;
+		try
+		{
+			atlas = FlxAtlasFrames.fromSparrow('assets/images/NOTE_assets.png', 'assets/images/NOTE_assets.xml');
+		}
+		catch (e:Dynamic)
+		{
+			atlas = null;
+		}
+
+		var size:Int = 120;
+		var y:Float = FlxG.height - size - 30;
 
 		for (i in 0...4)
 		{
-			var t:FlxText = new FlxText(60 + step * i, y, step, labels[i], 74);
-			t.setFormat(null, 74, FlxColor.WHITE, CENTER);
-			t.alpha = 0.35;
-			t.scrollFactor.set(0, 0);
-			add(t);
-			arrows.push(t);
-			flash[i] = 0.0;
+			var s:FlxSprite = new FlxSprite(0, y);
+
+			if (atlas != null)
+			{
+				s.frames = atlas;
+				s.animation.addByNames('idle', [IDLE_FRAMES[i]], 1, false);
+				s.animation.addByNames('press', [PRESS_FRAMES[i]], 1, false);
+				s.animation.play('idle');
+				s.setGraphicSize(size, size);
+				s.updateHitbox();
+			}
+			else
+			{
+				s.makeGraphic(size, size, FlxColor.WHITE);
+				s.alpha = 0.4;
+			}
+
+			s.scrollFactor.set(0, 0);
+			s.x = PlayTouch.zoneX(i) + (PlayTouch.ZONE_W - s.width) / 2;
+			add(s);
+			arrows.push(s);
 		}
 
-		// Видимая иконка паузы в правом верхнем углу — там же, где зона нажатия
-		pauseIcon = new FlxText(FlxG.width - 150, 24, 120, 'II', 56);
+		pauseIcon = new FlxText(FlxG.width - PlayTouch.PAUSE_W, 24, PlayTouch.PAUSE_W, 'II', 56);
 		pauseIcon.setFormat(null, 56, FlxColor.WHITE, CENTER);
 		pauseIcon.alpha = 0.45;
 		pauseIcon.scrollFactor.set(0, 0);
 		add(pauseIcon);
 	}
 
-	/** Подсветить стрелку при попадании в ноту. */
 	public function hit(action:String):Void
 	{
 		var idx:Int = ACTIONS.indexOf(action);
@@ -64,18 +87,26 @@ class TouchArrows extends FlxSpriteGroup
 
 		for (i in 0...4)
 		{
-			var action:String = ACTIONS[i];
-			var down:Bool = Controls.touchIsDown(action);
-			var f:Float = flash[i];
-			if (f > 0)
+			var down:Bool = Controls.touchIsDown(ACTIONS[i]);
+			if (flash[i] > 0)
 			{
-				f -= elapsed;
-				if (f < 0) f = 0;
-				flash[i] = f;
+				flash[i] -= elapsed;
+				if (flash[i] < 0)
+					flash[i] = 0;
 			}
 
-			var active:Bool = down || f > 0;
-			arrows[i].alpha = active ? 1.0 : 0.35;
+			var active:Bool = down || flash[i] > 0;
+
+			if (atlas != null)
+			{
+				var want:String = active ? 'press' : 'idle';
+				if (arrows[i].animation.name != want)
+					arrows[i].animation.play(want);
+			}
+			else
+			{
+				arrows[i].alpha = active ? 1.0 : 0.4;
+			}
 		}
 
 		if (pauseIcon != null)
